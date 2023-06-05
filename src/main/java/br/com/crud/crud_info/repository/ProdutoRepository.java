@@ -1,10 +1,12 @@
 package br.com.crud.crud_info.repository;
 
 import java.util.ArrayList;
-import java.util.InputMismatchException;
+
 import java.util.List;
 import java.util.Optional;
 import br.com.crud.crud_info.model.Produto;
+import br.com.crud.crud_info.model.exception.ResouceNotFoundException;
+
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -43,7 +45,7 @@ public class ProdutoRepository {
   public Produto atualizar(Produto produto) {
     Optional<Produto> produtoEncontrado = obterPorId(produto.getId());
     if (produtoEncontrado.isEmpty()) {
-      throw new InputMismatchException("Produto não encontrado");
+      throw new ResouceNotFoundException("Produto não encontrado");
     }
     deletar(produto.getId());
     produtos.add(produto);
