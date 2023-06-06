@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import br.com.crud.crud_info.model.Produto;
-import br.com.crud.crud_info.model.exception.ResouceNotFoundException;
+import br.com.crud.crud_info.model.exception.ResourceNotFoundException;
 
 import org.springframework.stereotype.Repository;
 
@@ -45,7 +45,7 @@ public class ProdutoRepository_old {
   public Produto atualizar(Produto produto) {
     Optional<Produto> produtoEncontrado = obterPorId(produto.getId());
     if (produtoEncontrado.isEmpty()) {
-      throw new ResouceNotFoundException("Produto não encontrado");
+      throw new ResourceNotFoundException("Produto não encontrado");
     }
     deletar(produto.getId());
     produtos.add(produto);

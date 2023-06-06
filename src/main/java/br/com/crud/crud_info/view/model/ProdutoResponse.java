@@ -1,15 +1,7 @@
-package br.com.crud.crud_info.model;
+package br.com.crud.crud_info.view.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+public class ProdutoResponse {
 
-@Entity
-public class Produto {
-
-  @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
   private Integer id;
 
   private String nome;
@@ -28,12 +20,22 @@ public class Produto {
     this.id = id;
   }
 
+  public ProdutoResponse id(Integer id) {
+    this.id = id;
+    return this;
+  }
+
   public String getNome() {
     return nome;
   }
 
   public void setNome(String nome) {
     this.nome = nome;
+  }
+
+  public ProdutoResponse nome(String nome) {
+    this.nome = nome;
+    return this;
   }
 
   public Integer getQuantidade() {
@@ -44,6 +46,11 @@ public class Produto {
     this.quantidade = quantidade;
   }
 
+  public ProdutoResponse quantidade(Integer quantidade) {
+    this.quantidade = quantidade;
+    return this;
+  }
+
   public Double getValor() {
     return valor;
   }
@@ -52,11 +59,21 @@ public class Produto {
     this.valor = valor;
   }
 
+  public ProdutoResponse valor(Double valor) {
+    this.valor = valor;
+    return this;
+  }
+
   public String getObservacao() {
     return observacao;
   }
 
   public void setObservacao(String observacao) {
     this.observacao = observacao;
+  }
+
+  public ProdutoResponse observacao(String observacao) {
+    this.observacao = observacao;
+    return this;
   }
 }

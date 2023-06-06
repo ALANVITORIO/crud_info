@@ -1,39 +1,69 @@
 package br.com.crud.crud_info.services;
 
-import java.util.List;
-import java.util.Optional;
-
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.crud.crud_info.model.Produto;
+import br.com.crud.crud_info.model.exception.ResourceNotFoundException;
 import br.com.crud.crud_info.repository.ProdutoRepository_old;
+import br.com.crud.crud_info.shared.ProdutoDTO;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ProdutoService {
+
   @Autowired
   private ProdutoRepository_old produtoRepository;
 
-  public List<Produto> obterTodoss() {
-    return produtoRepository.obterTodos();
+  private ModelMapper modelMapper = new ModelMapper();
+
+  public List<ProdutoDTO> obterTodos() {
+    List<Produto> produtos = produtoRepository.obterTodos();
+
+    return produtos.stream()
+        .map(produto -> modelMapper.map(produto, ProdutoDTO.class))
+        .collect(Collectors.toList());
   }
 
-  public Optional<Produto> obterPorId(Integer id) {
-    return produtoRepository.obterPorId(id);
+  public Optional<ProdutoDTO> obterPorId(Integer id) {
+    Optional<Produto> produto = produtoRepository.obterPorId(id);
+    if (produto.isEmpty()) {
+      throw new ResourceNotFoundException("Produto com id : " + id + " Não encontrado");
+    }
+
+    ProdutoDTO dto = modelMapper.map(produto.get(), ProdutoDTO.class);
+    return Optional.of(dto);
   }
 
-  public Produto adicionar(Produto produto) {
-    return produtoRepository.adicionar(produto);
+  public ProdutoDTO adicionar(ProdutoDTO produtoDto) {
+    produtoDto.setId(null);
+
+    Produto produto = modelMapper.map(produtoDto, Produto.class);
+    produto = produtoRepository.adicionar(produto);
+    produtoDto.setId(produto.getId());
+
+    return produtoDto;
   }
 
   public void deletar(Integer id) {
+    Optional<Produto> produto = produtoRepository.obterPorId(id);
+    if (produto.isEmpty()) {
+      throw new ResourceNotFoundException("Não foi possível deletar o produto com o id:" + id);
+    }
+
     produtoRepository.deletar(id);
   }
 
-  public Produto atualizar(Integer id, Produto produto) {
-    // ter alguma validação
-    produto.setId(id);
-    return produtoRepository.atualizar(produto);
-  }
+  public ProdutoDTO atualizar(Integer id, ProdutoDTO produtoDto) {
+    produtoDto.setId(id);
 
+    Produto produto = modelMapper.map(produtoDto, Produto.class);
+    produto = produtoRepository.atualizar(produto);
+
+    return produtoDto;
+  }
 }

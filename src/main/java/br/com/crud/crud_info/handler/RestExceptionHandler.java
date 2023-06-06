@@ -6,13 +6,13 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import br.com.crud.crud_info.model.error.ErrorMessage;
-import br.com.crud.crud_info.model.exception.ResouceNotFoundException;
+import br.com.crud.crud_info.model.exception.ResourceNotFoundException;
 
 @ControllerAdvice
 public class RestExceptionHandler {
 
-  @ExceptionHandler(ResouceNotFoundException.class)
-  public ResponseEntity<?> handleResourceNotFoundException(ResouceNotFoundException ex) {
+  @ExceptionHandler(ResourceNotFoundException.class)
+  public ResponseEntity<?> handleResourceNotFoundException(ResourceNotFoundException ex) {
 
     ErrorMessage error = new ErrorMessage("Not Found", HttpStatus.NOT_FOUND.value(), ex.getMessage());
     return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
