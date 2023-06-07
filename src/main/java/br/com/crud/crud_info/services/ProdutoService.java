@@ -3,12 +3,10 @@ package br.com.crud.crud_info.services;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import br.com.crud.crud_info.model.Produto;
 import br.com.crud.crud_info.model.exception.ResourceNotFoundException;
 import br.com.crud.crud_info.repository.ProdutoRepository_old;
 import br.com.crud.crud_info.shared.ProdutoDTO;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -22,7 +20,7 @@ public class ProdutoService {
   private ModelMapper modelMapper = new ModelMapper();
 
   public List<ProdutoDTO> obterTodos() {
-    List<Produto> produtos = produtoRepository.obterTodos();
+    List<Produto> produtos = produtoRepository.findAll();
 
     return produtos.stream()
         .map(produto -> modelMapper.map(produto, ProdutoDTO.class))
@@ -30,7 +28,7 @@ public class ProdutoService {
   }
 
   public Optional<ProdutoDTO> obterPorId(Integer id) {
-    Optional<Produto> produto = produtoRepository.obterPorId(id);
+    Optional<Produto> produto = produtoRepository.findById(id);
     if (produto.isEmpty()) {
       throw new ResourceNotFoundException("Produto com id : " + id + " Não encontrado");
     }
@@ -43,26 +41,26 @@ public class ProdutoService {
     produtoDto.setId(null);
 
     Produto produto = modelMapper.map(produtoDto, Produto.class);
-    produto = produtoRepository.adicionar(produto);
+    produto = produtoRepository.save(produto);
     produtoDto.setId(produto.getId());
 
     return produtoDto;
   }
 
   public void deletar(Integer id) {
-    Optional<Produto> produto = produtoRepository.obterPorId(id);
+    Optional<Produto> produto = produtoRepository.findById(id);
     if (produto.isEmpty()) {
       throw new ResourceNotFoundException("Não foi possível deletar o produto com o id:" + id);
     }
 
-    produtoRepository.deletar(id);
+    produtoRepository.deleteById(id);
   }
 
   public ProdutoDTO atualizar(Integer id, ProdutoDTO produtoDto) {
     produtoDto.setId(id);
 
     Produto produto = modelMapper.map(produtoDto, Produto.class);
-    produto = produtoRepository.atualizar(produto);
+    produto = produtoRepository.save(produto);
 
     return produtoDto;
   }
