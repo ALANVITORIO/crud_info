@@ -28,8 +28,8 @@ public class ProdutoController {
     ModelMapper mapper = new ModelMapper();
 
     List<ProdutoResponse> resposta = produtos.stream()
-        .map(produtoDto -> mapper.map(produtoDto, ProdutoResponse.class))
-        .collect(Collectors.toList());
+            .map(produtoDto -> mapper.map(produtoDto, ProdutoResponse.class))
+            .collect(Collectors.toList());
 
     return new ResponseEntity<>(resposta, HttpStatus.OK);
   }
